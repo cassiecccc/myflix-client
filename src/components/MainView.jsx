@@ -1,32 +1,25 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MovieCard } from "./MovieCard";
 import { MovieView } from "./MovieView";
 
 export function MainView() {
-  const [movies, setMovies] = useState([
-    {
-      id: 1,
-      title: "Se7en",
-      director: "David Fincher",
-      image:
-        "https://m.media-amazon.com/images/M/MV5BOTUwODM5MTctZjczMi00OTk4LTg3NWUtNmVhMTAzNTNjYjcyXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
-    },
-    {
-      id: 2,
-      title: "Pulp Fiction",
-      director: "Quentin Tarantino",
-      image:
-        "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
-    },
-    {
-      id: 3,
-      title: "The Social Network",
-      director: "David Fincher",
-      image:
-        "https://m.media-amazon.com/images/M/MV5BOGUyZDUxZjEtMmIzMC00MzlmLTg4MGItZWJmMzBhZjE0Mjc1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-    },
-  ]);
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    fetch("https://myflix-cassie.herokuapp.com/movies")
+      .then((res) => res.json())
+      .then((movies) => {
+        const moviesFromAPI = movies.map((movie) => {
+          return {
+            id: movie._id,
+            title: movie.Title,
+            director: movie.Director.Name,
+            image: movie.ImagePath,
+          };
+        });
+        setMovies(moviesFromAPI);
+      });
+  }, []);
 
   const [selectedMovie, setSelectedMovie] = useState(null);
   if (selectedMovie) {
@@ -37,6 +30,8 @@ export function MainView() {
       />
     );
   }
+
+  console.log(movies);
 
   return (
     <>

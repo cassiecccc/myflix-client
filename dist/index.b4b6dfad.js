@@ -27297,35 +27297,30 @@ var _movieView = require("./MovieView");
 var _s = $RefreshSig$();
 function MainView() {
     _s();
-    const [movies, setMovies] = (0, _react.useState)([
-        {
-            id: 1,
-            title: "Se7en",
-            director: "David Fincher",
-            image: "https://m.media-amazon.com/images/M/MV5BOTUwODM5MTctZjczMi00OTk4LTg3NWUtNmVhMTAzNTNjYjcyXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg"
-        },
-        {
-            id: 2,
-            title: "Pulp Fiction",
-            director: "Quentin Tarantino",
-            image: "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg"
-        },
-        {
-            id: 3,
-            title: "The Social Network",
-            director: "David Fincher",
-            image: "https://m.media-amazon.com/images/M/MV5BOGUyZDUxZjEtMmIzMC00MzlmLTg4MGItZWJmMzBhZjE0Mjc1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg"
-        }
-    ]);
+    const [movies, setMovies] = (0, _react.useState)([]);
+    (0, _react.useEffect)(()=>{
+        fetch("https://myflix-cassie.herokuapp.com/movies").then((res)=>res.json()).then((movies)=>{
+            const moviesFromAPI = movies.map((movie)=>{
+                return {
+                    id: movie._id,
+                    title: movie.Title,
+                    director: movie.Director.Name,
+                    image: movie.ImagePath
+                };
+            });
+            setMovies(moviesFromAPI);
+        });
+    }, []);
     const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
     if (selectedMovie) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieView.MovieView), {
         movie: selectedMovie,
         onBackClick: ()=>setSelectedMovie(null)
     }, void 0, false, {
         fileName: "src/components/MainView.jsx",
-        lineNumber: 34,
+        lineNumber: 27,
         columnNumber: 7
     }, this);
+    console.log(movies);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
             children: movies.map((movie)=>{
@@ -27334,18 +27329,18 @@ function MainView() {
                     onMovieClick: (newSelectMovie)=>setSelectedMovie(newSelectMovie)
                 }, movie.id, false, {
                     fileName: "src/components/MainView.jsx",
-                    lineNumber: 46,
+                    lineNumber: 41,
                     columnNumber: 13
                 }, this);
             })
         }, void 0, false, {
             fileName: "src/components/MainView.jsx",
-            lineNumber: 43,
+            lineNumber: 38,
             columnNumber: 7
         }, this)
     }, void 0, false);
 }
-_s(MainView, "67XuwajgG4GEHijk434VCZChuE8=");
+_s(MainView, "llzgrUkvR/+OoCNfiqlA1H2LLFI=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
