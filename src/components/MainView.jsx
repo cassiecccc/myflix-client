@@ -2,11 +2,24 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { MovieCard } from "./MovieCard";
 import { MovieView } from "./MovieView";
+import { LoginView } from "./LoginView";
+import { SignupView } from "./SignupView";
 
 export function MainView() {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedToken = localStorage.getItem("token");
+  const [user, setUser] = useState(storedUser ? storedUser : null);
+  const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
   useEffect(() => {
-    fetch("https://myflix-cassie.herokuapp.com/movies")
+    if (!token) {
+      return;
+    }
+    fetch("https://myflix-cassie.herokuapp.com/movies", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((res) => res.json())
       .then((movies) => {
         const moviesFromAPI = movies.map((movie) => {
@@ -19,9 +32,23 @@ export function MainView() {
         });
         setMovies(moviesFromAPI);
       });
-  }, []);
+  }, [token]);
 
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  if (!user) {
+    return (
+      <>
+        <LoginView
+          onLoggedIn={(user, token) => {
+            setUser(user);
+            setToken(token);
+          }}
+        />
+        or
+        <SignupView />
+      </>
+    );
+  }
+
   if (selectedMovie) {
     return (
       <MovieView
@@ -31,7 +58,9 @@ export function MainView() {
     );
   }
 
-  console.log(movies);
+  if (movies.length === 0) {
+    return <div>The list is empty!</div>;
+  }
 
   return (
     <>
@@ -48,6 +77,15 @@ export function MainView() {
           );
         })}
       </div>
+      <button
+        onClick={() => {
+          setUser(null);
+          setToken(null);
+          localStorage.clear();
+        }}
+      >
+        Logout
+      </button>
     </>
   );
 }
