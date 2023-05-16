@@ -1,13 +1,15 @@
 import { createRoot } from "react-dom/client";
-import { MainView } from "./components/MainView";
+import { MainView } from "./components/MainView/MainView";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Container from "react-bootstrap/Container";
 import "./index.scss";
 
 // Main component (will eventually use all the others)
 const MyFlixApplication = () => {
   return (
-    <div className="my-flix">
+    <Container className="my-flix">
       <MainView />
-    </div>
+    </Container>
   );
 };
 
